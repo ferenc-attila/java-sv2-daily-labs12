@@ -42,13 +42,13 @@ public class SummarizeRunning {
         List<DailyWorkout> workouts = new ArrayList<>();
         try (BufferedReader br = Files.newBufferedReader(path)) {
             String line;
+            br.readLine();
             while ((line = br.readLine()) != null) {
                 workouts.add(createWorkouts(line));
             }
         } catch (IOException ioe) {
             throw new IllegalStateException("Cannot read file!", ioe);
         }
-        workouts.remove(0);
         return workouts;
     }
 }
