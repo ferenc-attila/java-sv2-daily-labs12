@@ -13,8 +13,7 @@ import java.util.regex.PatternSyntaxException;
 public class SummarizeRunning {
 
     public double summarize(Path path, int year, int month) {
-        List<String> lines = readFile(path);
-        List<DailyWorkout> workouts = createWorkouts(lines);
+        List<DailyWorkout> workouts = readFile(path);
         return getResult(year, month, workouts);
     }
 
@@ -28,30 +27,29 @@ public class SummarizeRunning {
         return result;
     }
 
-    private List<DailyWorkout> createWorkouts(List<String> lines) {
-        List<DailyWorkout> workouts = new ArrayList<>();
+    private DailyWorkout createWorkouts(String line) {
+        DailyWorkout workout;
         try {
-            for (String line : lines) {
-                String[] values = line.split(" km;");
-                workouts.add(new DailyWorkout(Double.parseDouble(values[0]), LocalDate.parse(values[1])));
-            }
+            String[] values = line.split(" km;");
+            workout = new DailyWorkout(Double.parseDouble(values[0]), LocalDate.parse(values[1]));
+
         } catch (NumberFormatException | NullPointerException | PatternSyntaxException | DateTimeParseException exception) {
             throw new IllegalArgumentException("Invalid data in the table!", exception);
         }
-        return workouts;
+        return workout;
     }
 
-    private List<String> readFile(Path path) {
-        List<String> lines = new ArrayList<>();
+    private List<DailyWorkout> readFile(Path path) {
+        List<DailyWorkout> workouts = new ArrayList<>();
         try (BufferedReader br = Files.newBufferedReader(path)) {
             br.readLine();
             String line;
             while ((line = br.readLine()) != null) {
-                lines.add(line);
+                workouts.add(createWorkouts(line));
             }
         } catch (IOException ioe) {
             throw new IllegalStateException("Cannot read file!", ioe);
         }
-        return lines;
+        return workouts;
     }
 }
