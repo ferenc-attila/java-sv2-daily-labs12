@@ -12,11 +12,20 @@ public class SummarizeRunning {
     public double summarize (Path path, int year, int month) {
         List<String> lines = readFile(path);
         List<DailyWorkout> workouts = createWorkouts(lines);
+        double result = getResult(year, month, workouts);
+        return result;
+    }
+
+    private double getResult(int year, int month, List<DailyWorkout> workouts) {
         double result = 0;
-        for (DailyWorkout workout : workouts) {
-            if (workout.getDate().getYear() == year && workout.getDate().getMonthValue() == month) {
-                result+= workout.getLength();
+        try {
+            for (DailyWorkout workout : workouts) {
+                if (workout.getDate().getYear() == year && workout.getDate().getMonthValue() == month) {
+                    result += workout.getLength();
+                }
             }
+        } catch (NumberFormatException | NullPointerException exception) {
+            throw new IllegalArgumentException("Invalid data in the table!", exception);
         }
         return result;
     }
