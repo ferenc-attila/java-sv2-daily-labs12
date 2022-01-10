@@ -1,12 +1,13 @@
 package day01;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.regex.PatternSyntaxException;
 
 public class SummarizeRunning {
@@ -42,14 +43,15 @@ public class SummarizeRunning {
 
     private List<String> readFile(Path path) {
         List<String> lines = new ArrayList<>();
-        try (Scanner scanner = new Scanner(path)) {
-            while (scanner.hasNextLine()) {
-                lines.add(scanner.nextLine());
+        try (BufferedReader br = Files.newBufferedReader(path)) {
+            br.readLine();
+            String line;
+            while ((line = br.readLine()) != null) {
+                lines.add(line);
             }
         } catch (IOException ioe) {
             throw new IllegalStateException("Cannot read file!", ioe);
         }
-        lines.remove(0);
         return lines;
     }
 }
