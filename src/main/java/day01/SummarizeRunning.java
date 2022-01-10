@@ -3,38 +3,39 @@ package day01;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.PatternSyntaxException;
 
 public class SummarizeRunning {
 
-    public double summarize (Path path, int year, int month) {
+    public double summarize(Path path, int year, int month) {
         List<String> lines = readFile(path);
         List<DailyWorkout> workouts = createWorkouts(lines);
-        double result = getResult(year, month, workouts);
-        return result;
+        return getResult(year, month, workouts);
     }
 
     private double getResult(int year, int month, List<DailyWorkout> workouts) {
         double result = 0;
-        try {
-            for (DailyWorkout workout : workouts) {
-                if (workout.getDate().getYear() == year && workout.getDate().getMonthValue() == month) {
-                    result += workout.getLength();
-                }
+        for (DailyWorkout workout : workouts) {
+            if (workout.getDate().getYear() == year && workout.getDate().getMonthValue() == month) {
+                result += workout.getLength();
             }
-        } catch (NumberFormatException | NullPointerException exception) {
-            throw new IllegalArgumentException("Invalid data in the table!", exception);
         }
         return result;
     }
 
     private List<DailyWorkout> createWorkouts(List<String> lines) {
         List<DailyWorkout> workouts = new ArrayList<>();
-        for (String line : lines) {
-            String[] values = line.split(" km;");
-            workouts.add(new DailyWorkout(Double.parseDouble(values[0]), LocalDate.parse(values[1])));
+        try {
+            for (String line : lines) {
+                String[] values = line.split(" km;");
+                workouts.add(new DailyWorkout(Double.parseDouble(values[0]), LocalDate.parse(values[1])));
+            }
+        } catch (NumberFormatException | NullPointerException | PatternSyntaxException | DateTimeParseException exception) {
+            throw new IllegalArgumentException("Invalid data in the table!", exception);
         }
         return workouts;
     }
