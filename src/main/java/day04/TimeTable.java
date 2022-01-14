@@ -10,6 +10,7 @@ import java.util.List;
 public class TimeTable {
 
     private List<SubjectAssignment> assignments = new ArrayList<>();
+    private Validations validations = new Validations();
 
     public void addAssignment(SubjectAssignment assignment) {
         assignments.add(assignment);
@@ -26,17 +27,27 @@ public class TimeTable {
                 assignments.add(new SubjectAssignment(line, br.readLine(), br.readLine(), Integer.parseInt(br.readLine())));
             }
         } catch (IOException ioe) {
-            throw new IllegalStateException("Unable to read file");
+            throw new IllegalStateException("Unable to read file!");
+        } catch (NumberFormatException nfe) {
+            throw new IllegalArgumentException("Invalid number of lessons!");
         }
     }
 
     public int getNumberOfLessonsPerTeacher(String name) {
         int sum = 0;
+        validations.validateName(name);
         for (SubjectAssignment actual : assignments) {
             if (name.equals(actual.getTeacherName())) {
                 sum += actual.getNumberOfLessons();
             }
         }
+        validateResult(sum, name);
         return sum;
+    }
+
+    private void validateResult(int sum, String name) {
+        if (sum == 0) {
+            throw new IllegalArgumentException(name + " is not a name of a teacher!");
+        }
     }
 }

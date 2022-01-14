@@ -3,23 +3,32 @@ package day04;
 public class SubjectAssignment {
 
     private String teacherName;
-    private String Subject;
+    private String subject;
     private String className;
     private int numberOfLessons;
+    private Validations validations = new Validations();
 
     public SubjectAssignment(String teacherName, String subject, String className, int numberOfLessons) {
+        validateParameters(teacherName, subject, className, numberOfLessons);
         this.teacherName = teacherName;
-        Subject = subject;
+        this.subject = subject;
         this.className = className;
         this.numberOfLessons = numberOfLessons;
     }
+
+    private void validateParameters(String teacherName, String subject, String className, int numberOfLessons) {
+        validations.validateName(teacherName);
+        validations.validateString(subject);
+        validations.validateClassName(className);
+        validations.validateNumberOfLessons(numberOfLessons);
+        }
 
     public String getTeacherName() {
         return teacherName;
     }
 
     public String getSubject() {
-        return Subject;
+        return subject;
     }
 
     public String getClassName() {
